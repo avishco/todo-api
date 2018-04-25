@@ -6,7 +6,6 @@ const {User} = require('./models/user');
 const {Todo} = require('./models/todo');
 
 const app = express();
-
 app.use(bodyParser.json());
 
 app.post('/todos', (req, res) => {
@@ -27,3 +26,5 @@ app.post('/users', (req, res) => {
 app.listen(3000, () => {
   console.log('running on port 3000');
 });
+
+module.exports = app;
