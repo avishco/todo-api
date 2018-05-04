@@ -16,8 +16,8 @@ app.post('/todos', (req, res) => {
   const todo  = new Todo({
     text: req.body.text
   });
-  todo.save().then((doc) => {
-    res.status(201).send(doc);
+  todo.save().then((todo) => {
+    res.status(201).send(todo);
   }, (e) => {
     res.status(400).send(e);
   })
@@ -42,7 +42,7 @@ app.get('/todos/:id', (req, res) => {
       if (!todo) {
         return res.status(404).send()
       }
-        res.status(200).send({todo})
+      res.status(200).send({todo})
     }).catch((e) => {
       res.status(400).send(e);
     })
@@ -92,6 +92,19 @@ app.patch('/todos/:id', (req, res) => {
     .catch((e) => {
       res.status(400).send();
     })
+});
+
+app.post('/users', (req, res) => {
+  const body = _.pick(req.body, ['email', 'password']);
+  const user  = new User(body);
+
+  user.save().then(() => {
+    return user.generateAuthToken();
+  }).then((token) => {
+    res.status(201).header('x-auth', token).send(user)
+  }).catch((e) => {
+    res.status(400).send(e);
+  })
 });
 
 app.listen(port, () => {
