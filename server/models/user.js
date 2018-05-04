@@ -1,3 +1,5 @@
+const secret = 'abc123';
+
 const _ = require('lodash');
 const validator = require('validator');
 const mongoose = require('mongoose');
@@ -26,7 +28,7 @@ const UserSchema = new mongoose.Schema({
   }]
 });
 
-UserSchema.methods.toJSON = function () {
+UserSchema.methods.toJSON = function() {
   const user = this;
   const userObject = user.toObject();
   return _.pick(userObject, ['_id', 'email'])
@@ -35,10 +37,26 @@ UserSchema.methods.toJSON = function () {
 UserSchema.methods.generateAuthToken = function() {
   const user = this;
   const access = 'auth';
-  const token = jwt.sign({_id: user._id.toHexString(), access}, 'abc123').toString();
+  const token = jwt.sign({_id: user._id.toHexString(), access}, secret).toString();
   user.tokens = user.tokens.concat([{access, token}]);
   return user.save().then(() => {
     return token;
+  })
+};
+
+UserSchema.statics.findByToken = function(token) {
+  const User = this;
+  let decoded;
+
+  try {
+    decoded = jwt.verify(token, secret)
+  } catch (e) {
+    return Promise.reject();
+  }
+  return User.findOne({
+    '_id': decoded._id,
+    'tokens.token': token,
+    'tokens.access': 'auth'
   })
 };
 
