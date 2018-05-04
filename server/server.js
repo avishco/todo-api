@@ -8,7 +8,7 @@ const {mongoose} = require('./db/mongoose');
 
 const {User} = require('./models/user');
 const {Todo} = require('./models/todo');
-const {authenticate} = require('./midleware/authenticate');
+const {authenticate} = require('./middleware/authenticate');
 
 const app = express();
 const port = process.env.PORT;
