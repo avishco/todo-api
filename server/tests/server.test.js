@@ -218,15 +218,7 @@ describe('POST /users', () => {
       .post('/users')
       .send({email, password})
       .expect(400)
-      .expect((res) => {
-        console.log(res.body);
-      })
-      .end((err) => {
-        if (err) {
-          return done(err);
-        }
-        done();
-      });
+      .end(done);
   });
   it('should not create a user if email in use', (done) => {
     const email = users[0].email,
@@ -236,14 +228,6 @@ describe('POST /users', () => {
       .post('/users')
       .send({email, password})
       .expect(400)
-      .expect((res) => {
-        console.log(res.body);
-      })
-      .end((err) => {
-        if (err) {
-          return done(err);
-        }
-        done();
-      });
+      .end(done);
   });
 });
