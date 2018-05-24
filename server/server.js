@@ -130,6 +130,16 @@ app.post('/users/login', (req, res) => {
       res.status(400).send(e)})
 });
 
+app.delete('/users/me/token', authenticate, (req, res) => {
+  req.user.removeToken(req.token)
+    .then(() => {
+      res.status(200).send()
+    })
+    .catch((e) => {
+      res.status(400).send(e)
+    })
+});
+
 app.listen(port, () => {
   console.log(`running on port ${port}`);
 });
